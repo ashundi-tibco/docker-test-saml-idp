@@ -1,5 +1,4 @@
 FROM php:7.1-apache
-MAINTAINER Kristoph Junge <kristoph.junge@gmail.com>
 
 # Utilities
 RUN apt-get update && \
@@ -8,11 +7,15 @@ RUN apt-get update && \
 
 # SimpleSAMLphp
 ARG SIMPLESAMLPHP_VERSION=1.15.2
+COPY config/metadata/metadata.patch /tmp/
 RUN curl -s -L -o /tmp/simplesamlphp.tar.gz https://github.com/simplesamlphp/simplesamlphp/releases/download/v$SIMPLESAMLPHP_VERSION/simplesamlphp-$SIMPLESAMLPHP_VERSION.tar.gz && \
     tar xzf /tmp/simplesamlphp.tar.gz -C /tmp && \
     rm -f /tmp/simplesamlphp.tar.gz  && \
     mv /tmp/simplesamlphp-* /var/www/simplesamlphp && \
-    touch /var/www/simplesamlphp/modules/exampleauth/enable
+    touch /var/www/simplesamlphp/modules/exampleauth/enable && \
+    sed --in-place 's/BINDING_HTTP_REDIRECT/BINDING_HTTP_POST/' /var/www/simplesamlphp/lib/SimpleSAML/Configuration.php && \
+    patch -i /tmp/metadata.patch /var/www/simplesamlphp/lib/SimpleSAML/Metadata/MetaDataStorageHandler.php 
+
 COPY config/simplesamlphp/config.php /var/www/simplesamlphp/config
 COPY config/simplesamlphp/authsources.php /var/www/simplesamlphp/config
 COPY config/simplesamlphp/saml20-sp-remote.php /var/www/simplesamlphp/metadata
