@@ -1,0 +1,9 @@
+105c105
+<                 return \SAML2\Constants::BINDING_HTTP_REDIRECT;
+---
+>                 return \SAML2\Constants::BINDING_HTTP_POST;
+119c119
+<                     return \SAML2\Constants::BINDING_HTTP_REDIRECT;
+---
+>                     return \SAML2\Constants::BINDING_HTTP_POST;
+
