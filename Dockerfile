@@ -39,8 +39,16 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2dissite 000-default.conf default-ssl.conf && \
     a2ensite simplesamlphp.conf
 
+RUN apt update -y && apt upgrade -y && apt install -y python3 && apt install -y python3-pip && pip3 install readerwriterlock
+
+COPY config/run-services.sh /var/www/simplesamlphp/config/run-services.sh
+
+
+ENTRYPOINT ["/var/www/simplesamlphp/config/run-services.sh"]
+CMD ["/bin/bash", "-c", "/var/www/simplesamlphp/config/run-services.sh"]
+
 # Set work dir
 WORKDIR /var/www/simplesamlphp
 
 # General setup
-EXPOSE 8080 8443
+EXPOSE 8080 8443 8000
