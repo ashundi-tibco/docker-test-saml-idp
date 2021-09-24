@@ -7,7 +7,6 @@ RUN apt-get update && \
 
 # SimpleSAMLphp
 ARG SIMPLESAMLPHP_VERSION=1.15.2
-
 COPY metadata/metadata.patch /tmp/
 RUN curl -s -L -o /tmp/simplesamlphp.tar.gz https://github.com/simplesamlphp/simplesamlphp/releases/download/v$SIMPLESAMLPHP_VERSION/simplesamlphp-$SIMPLESAMLPHP_VERSION.tar.gz && \
     tar xzf /tmp/simplesamlphp.tar.gz -C /tmp && \
@@ -15,7 +14,6 @@ RUN curl -s -L -o /tmp/simplesamlphp.tar.gz https://github.com/simplesamlphp/sim
     mv /tmp/simplesamlphp-* /var/www/simplesamlphp && \
     touch /var/www/simplesamlphp/modules/exampleauth/enable && \
     sed --in-place 's/BINDING_HTTP_REDIRECT/BINDING_HTTP_POST/' /var/www/simplesamlphp/lib/SimpleSAML/Configuration.php && \
-
     patch -i /tmp/metadata.patch /var/www/simplesamlphp/lib/SimpleSAML/Metadata/MetaDataStorageHandler.php && \
     apt update && \
     apt install -y python3 && \
@@ -39,16 +37,8 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
     a2dissite 000-default.conf default-ssl.conf && \
     a2ensite simplesamlphp.conf
 
-RUN apt update -y && apt upgrade -y && apt install -y python3 && apt install -y python3-pip && pip3 install readerwriterlock
-
-COPY config/run-services.sh /var/www/simplesamlphp/config/run-services.sh
-
-
-ENTRYPOINT ["/var/www/simplesamlphp/config/run-services.sh"]
-CMD ["/bin/bash", "-c", "/var/www/simplesamlphp/config/run-services.sh"]
-
 # Set work dir
 WORKDIR /var/www/simplesamlphp
 
 # General setup
-EXPOSE 8080 8443 8000
+EXPOSE 8080 8443
