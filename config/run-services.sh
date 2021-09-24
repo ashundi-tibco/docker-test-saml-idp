@@ -6,22 +6,16 @@
 
 # ensure that initialization script is mounted
 
-if [ -d "/mounted/script/" ]
-then
+if [[ -d "/mounted/script/" && -f "/mounted/script/mock_ta.py" ]]; then
+    cp /mounted/script/* config
 
-    if [[ -f "/mounted/script/mock_ta.py" ]]; then
-        cp /mounted/script/* config
+    apache2ctl start
 
-        apache2ctl start
+    echo "Started apache2ctl..."
 
-        echo "Started apache2ctl..."
+    cd config/
 
-        cd config/
-
-        python3 mock_ta.py
-    else
-        echo "Error: Expected files do not exist."
-    fi
+    python3 mock_ta.py
 else
     echo "Error: Expected files do not exist."
 fi

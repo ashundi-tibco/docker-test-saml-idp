@@ -15,7 +15,6 @@ RUN curl -s -L -o /tmp/simplesamlphp.tar.gz https://github.com/simplesamlphp/sim
     mv /tmp/simplesamlphp-* /var/www/simplesamlphp && \
     touch /var/www/simplesamlphp/modules/exampleauth/enable && \
     sed --in-place 's/BINDING_HTTP_REDIRECT/BINDING_HTTP_POST/' /var/www/simplesamlphp/lib/SimpleSAML/Configuration.php && \
-
     patch -i /tmp/metadata.patch /var/www/simplesamlphp/lib/SimpleSAML/Metadata/MetaDataStorageHandler.php && \
     apt update && \
     apt install -y python3 && \
