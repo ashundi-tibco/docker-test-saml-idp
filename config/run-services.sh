@@ -7,7 +7,12 @@
 # ensure that initialization script is mounted
 
 if [[ -d "/mounted/script/" && -f "/mounted/script/mock_ta.py" ]]; then
+
     cp /mounted/script/* config
+
+    mkdir -p data/
+
+    cp /mounted/data/* data
 
     apache2ctl start
 
