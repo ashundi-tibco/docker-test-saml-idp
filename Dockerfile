@@ -43,7 +43,6 @@ RUN apt update -y && apt upgrade -y && apt install -y python3 && apt install -y 
 COPY config/run-services.sh /var/www/simplesamlphp/config/run-services.sh
 
 
-ENTRYPOINT ["/var/www/simplesamlphp/config/run-services.sh"]
 CMD ["/bin/bash", "-c", "/var/www/simplesamlphp/config/run-services.sh"]
 
 # Set work dir

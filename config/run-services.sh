@@ -1,18 +1,26 @@
 #!/bin/bash
 
-# ========================================================================================
-# Container initialization script.
-#========================================
+################################################################################
+# This image expects to be mounted with /mounted/script/ and /mounted/data/
+# folders containing optionally the init.sh script as well as the mandatory
+# /mounted/script/mock_ta.py
+################################################################################
+
+set -x
 
 # ensure that initialization script is mounted
 
-if [[ -d "/mounted/script/" && -f "/mounted/script/mock_ta.py" ]]; then
+if [[ -d "/mounted/script/" && -d /mounted/data/ && -f "/mounted/script/mock_ta.py" ]]; then
 
     cp /mounted/script/* config
 
     mkdir -p data/
 
     cp /mounted/data/* data
+
+    if [[ -f /mounted/script/init.sh ]]; then
+        source /mounted/script/init.sh
+    fi
 
     apache2ctl start
 
@@ -24,9 +32,3 @@ if [[ -d "/mounted/script/" && -f "/mounted/script/mock_ta.py" ]]; then
 else
     echo "Error: Expected files do not exist."
 fi
-
-################################################################################
-# This image first starts the apache server and then executes
-# mock_ta.py which in turn generates authsources.php having list of users
-# from users.csv
-################################################################################
