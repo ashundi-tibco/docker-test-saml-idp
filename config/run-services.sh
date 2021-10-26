@@ -10,13 +10,22 @@ set -x
 
 # ensure that initialization script is mounted
 
-if [[ -d "/mounted/script/" && -d /mounted/data/ && -f "/mounted/script/mock_ta.py" ]]; then
+if [[ -d "/mounted/script/" && -f "/mounted/script/mock_ta.py" ]]; then
 
     cp /mounted/script/* config
 
     mkdir -p data/
 
-    cp /mounted/data/* data
+# cic-2 data resides at /private/tsc/config/mock-idp/data
+# cic-1 data resides at /mounted/data
+    if [[ -d "/private/tsc/config/mock-idp/data" ]]; then
+        cp /private/tsc/config/mock-idp/data/* data
+        echo cic-2 setup started
+    elif [[ -d "/mounted/data/" ]]; then
+        echo cic-1 setup started
+        cp /mounted/data/* data
+    fi
+
 
     if [[ -f /mounted/script/init.sh ]]; then
         source /mounted/script/init.sh
